@@ -42,7 +42,7 @@ public class ProductoController {
 
 // Agregar filtros, paginación etc. y mover a un service
     @GetMapping("/products")
-    @Cacheable(value = "productos")
+    //@Cacheable(value = "productos") descomentar cuando funcione redis
     public List<Producto> findAll() {
         return productoRepository.findAll();
     }

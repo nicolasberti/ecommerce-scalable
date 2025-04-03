@@ -2,10 +2,23 @@
   "name": "microservice-user",
   "version": "1.0.0",
   "description": "User Service",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
+    "dev": "tsx --watch src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nicolas Berti",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.14.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "mongoose": "^8.13.1"
+  }
 }
