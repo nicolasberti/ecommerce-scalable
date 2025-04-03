@@ -1,0 +1,11 @@
+{
+  "name": "microservice-notification",
+  "version": "1.0.0",
+  "description": "Notification Service",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nicolas Berti",
+  "license": "ISC"
+}
