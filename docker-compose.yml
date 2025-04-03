@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_ecommerce
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: ecommerce
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  eureka:
+    build:
+      context: ./microservice-eureka  # Ruta donde está el Dockerfile de Eureka
+    container_name: eureka_server
+    ports:
+      - "8761:8761"
+    depends_on:
+      - mysql
+    restart: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker  # Si usas perfiles de Spring Boot
+      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
+      - EUREKA_CLIENT_FETCH_REGISTRY=false
+    networks:
+      - backend
+
+  redis:
+    image: redis:latest
+    container_name: redis_cache
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+     
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  backend:
+    driver: bridge

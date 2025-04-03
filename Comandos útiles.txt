@@ -1,0 +1,5 @@
+Levantar docker compose: docker-compose up
+	En segudno plano: docker-compose up -d
+	Re-crear las imagenes: docker-compose up --build
+
+Conectarse a la base de datos mediante la consola en Docker: docker exec -it mysql_ecommerce mysql -uroot -padmin
