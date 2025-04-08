@@ -96,7 +96,18 @@ services:
     restart: always
     networks:
       - backend
-
+      
+  nginx-gateway:
+    build:
+      context: ./nginx
+    container_name: nginx_gateway
+    ports:
+      - "80:80" 
+    depends_on:
+      - microservice-user
+      - microservice-product-catalog
+    networks:
+      - backend
 volumes:
   mysql_data:
     driver: local
