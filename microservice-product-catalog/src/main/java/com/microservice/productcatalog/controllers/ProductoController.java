@@ -40,13 +40,13 @@ public class ProductoController {
         this.updateProduct = updateProduct;
     }
 
-    @GetMapping("/")
+    @GetMapping
     //@Cacheable(value = "productos") descomentar cuando funcione redis
     public List<Producto> findAll() {
         return productoRepository.findAll();
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<?> createProduct(@Valid @RequestBody CreateProductRequest CreateProductRequest, BindingResult result) {
         if (result.hasErrors()) {
             List<String> errors = result.getFieldErrors().stream()
