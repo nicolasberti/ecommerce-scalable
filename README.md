@@ -34,4 +34,5 @@ ENDPOINTS
 - PUT /api/orders/<user_id>
 - GET /api/orders/<user_id>
 - GET /api/orders
+  
 Payment y Notification Service se manejan de manera interna por Kafka.
