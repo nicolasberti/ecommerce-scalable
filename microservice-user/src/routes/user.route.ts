@@ -4,6 +4,11 @@ import { generateToken } from "../utils/jwt";
 import bcrypt from "bcryptjs";
 import axios from "axios";
 import { getProductServiceUrl } from "../config/eurekaclient";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
+const JWT_SECRET = process.env.JWT_SECRET || "secret";
 
 export const userRoute = express.Router();
 
@@ -68,6 +73,22 @@ userRoute.post("/login", async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error del servidor" });
   }
   
+});
+
+// validate token
+userRoute.get('/auth', (req: Request, res: Response) => {
+  let token = '';
+  const authHeader = req.headers['authorization'];
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Token no proporcionado o inválido' });
+  }
+  if(authHeader != undefined)
+    token = authHeader.split(' ')[1];
+  const decoded = jwt.verify(token, JWT_SECRET);
+  if(decoded)
+    res.status(200).json({ message: 'Token válido' });
+  else
+    res.status(401).json({ error: 'Token no proporcionado o inválido' });
 });
 
 // comunicacion con el microservicio de ordenes

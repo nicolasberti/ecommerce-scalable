@@ -27,7 +27,7 @@ import org.springframework.cache.annotation.Cacheable;
 
 import jakarta.validation.Valid;
 
-@RestController
+@RestController("/products")
 public class ProductoController {
     
     private final ProductoRepository productoRepository;
@@ -40,14 +40,13 @@ public class ProductoController {
         this.updateProduct = updateProduct;
     }
 
-// Agregar filtros, paginación etc. y mover a un service
-    @GetMapping("/products")
+    @GetMapping("/")
     //@Cacheable(value = "productos") descomentar cuando funcione redis
     public List<Producto> findAll() {
         return productoRepository.findAll();
     }
 
-    @PostMapping("/create-product")
+    @PostMapping("/")
     public ResponseEntity<?> createProduct(@Valid @RequestBody CreateProductRequest CreateProductRequest, BindingResult result) {
         if (result.hasErrors()) {
             List<String> errors = result.getFieldErrors().stream()
@@ -61,9 +60,7 @@ public class ProductoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(producto);
     }
 
-
-    // no cumple solid, mover a un service. prox refactor.
-    @DeleteMapping("/delete-product/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
         try {
             Producto producto = productoRepository.findById(id)
@@ -80,7 +77,7 @@ public class ProductoController {
         }
     }
 
-    @PutMapping("/update-product/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @Valid @RequestBody UpdateProductoRequest updateProductoRequest, BindingResult result) {
         if (result.hasErrors()) {
             List<String> errors = result.getFieldErrors().stream()
