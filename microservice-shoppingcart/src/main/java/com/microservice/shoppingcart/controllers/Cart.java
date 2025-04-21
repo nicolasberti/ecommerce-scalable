@@ -9,7 +9,7 @@ import com.microservice.shoppingcart.services.CarritoService;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/cart") // ruta
 public class Cart {
     
     public CarritoService cartService;

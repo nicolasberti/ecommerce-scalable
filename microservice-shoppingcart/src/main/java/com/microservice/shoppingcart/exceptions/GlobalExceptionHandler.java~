@@ -1,4 +1,0 @@
-package com.microservice.shoppingcart.exceptions;
-
-public class GlobalExceptionHandler {
-}
