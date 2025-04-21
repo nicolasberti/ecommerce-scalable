@@ -1,6 +1,30 @@
 version: '3.8'
 
 services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+     - backend
+
+  kafka:
+    image: confluentinc/cp-kafka:7.0.1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092 # kafka x localhost ?
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+     - backend
+    
   mysql:
     image: mysql:latest
     container_name: mysql_ecommerce
@@ -96,6 +120,26 @@ services:
     restart: always
     networks:
       - backend
+      
+  microservice-shoppingcart:
+    build:
+      context: ./microservice-shoppingcart  # Ruta del microservicio
+    container_name: shoppingcart_service
+    ports:
+      - "8083:8083"
+    environment:
+      - spring.application.name=microservice-shoppingcart
+      - eureka.client.service-url.defaultZone=http://eureka:8761/eureka/
+      - eureka.client.register-with-eureka=true
+      - eureka.client.fetch-registry=true
+      - server.port=8083
+      - spring.data.mongodb.uri=mongodb://mongodb:27017/shoppingcart
+    depends_on:
+     - mongodb
+     - eureka
+    restart: always
+    networks:
+      - backend    
       
   nginx-gateway:
     build:
