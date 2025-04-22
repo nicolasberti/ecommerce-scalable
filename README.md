@@ -1,12 +1,16 @@
-# ecommerce-scalable
+# Proyecto "ecommerce-scalable"
+
+## Descripción
 Plataforma de comercio electrónico desarrollada bajo la arquitectura de microservicios.
 
 En construcción... 🚀⏳
 
+## Arquitectura del Sistema
 ![Arquitectura del sistema](imagenes/arquitectura.jpg)
+## Transacción crear órden asincrónica (con estado pendiente) - Patrón SAGA
 ![Transacción crear órden asincronica (con estado pendiente)](imagenes/orden_asincronica.jpg)
 
-Tecnologías y herramientas utilizadas:
+## Tecnologías y herramientas utilizadas
 - Spring Boot (Java)
 - Node.js (Typescript)
 - Nginx
@@ -19,7 +23,7 @@ Tecnologías y herramientas utilizadas:
 - Kafka
 - HTTP
 
-ENDPOINTS
+## Endpoints
 - POST /api/users/register
 - POST /api/users/login
 - GET /api/products
@@ -32,6 +36,7 @@ ENDPOINTS
 - GET /api/cart/<user_id>
 - DELETE /api/cart/<user_id>
 - POST /api/orders/<user_id>
+- POST /api/orders/wait/<user_id>
 - PUT /api/orders/<user_id>
 - GET /api/orders/<user_id>
 - GET /api/orders
