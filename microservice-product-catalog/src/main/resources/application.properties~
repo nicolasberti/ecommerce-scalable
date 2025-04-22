@@ -24,10 +24,4 @@ spring.redis.port=6379
 spring.cache.type=redis
 
 # Configuración de Kafka
-spring.kafka.bootstrap-servers: localhost:9092
-spring.kafka.consumer.group-id: my-group
-spring.kafka.consumer.auto-offset-reset: earliest
-spring.kafka.consumer.key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-spring.kafka.consumer.value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-spring.kafka.producer.key-serializer: org.apache.kafka.common.serialization.StringSerializer
-spring.kafka.producer.value-serializer: org.apache.kafka.common.serialization.StringSerializer
+

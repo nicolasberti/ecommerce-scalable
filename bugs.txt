@@ -1,1 +1,0 @@
-- Micro servicio de productos y categorías no conecta al contenedor de redis cuando corro docker compose, pero si conecta si lo corro en local. Resolver. (Prioridad baja)

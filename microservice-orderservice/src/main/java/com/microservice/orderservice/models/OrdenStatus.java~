@@ -1,0 +1,4 @@
+package com.microservice.orderservice.models;
+
+public enum OrdenStatus {
+}

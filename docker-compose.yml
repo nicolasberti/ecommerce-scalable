@@ -1,27 +1,28 @@
 services:
-#  zookeeper:
-#    image: confluentinc/cp-zookeeper:7.0.1
-#    environment:
-#      ZOOKEEPER_CLIENT_PORT: 2181
-#      ZOOKEEPER_TICK_TIME: 2000
-#    ports:
-#      - "2181:2181"
-#    networks:
-#     - backend
-#
-#  kafka:
-#    image: confluentinc/cp-kafka:7.0.1
-#    depends_on:
-#      - zookeeper
-#    ports:
-#      - "9092:9092"
-#    environment:
-#      KAFKA_BROKER_ID: 1
-#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092 # kafka x localhost ?
-#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-#    networks:
-#     - backend
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - backend
+
+  kafka:
+    image: confluentinc/cp-kafka:7.0.1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"  # permite crear automaticamente topicos
+    networks:
+      - backend
     
   mysql:
     image: mysql:latest
@@ -106,6 +107,8 @@ services:
     container_name: microservice-user
     ports:
       - "8082:8082"
+    #expose:
+    #  - "8082"  # Si cambio ports por esta línea, el microservicio solo es accesible mediante la red Docker, es decir, no puedo acceder mediante localhost:8082/users
     environment:
      - PORT=8082
      - MONGO_URI=mongodb://root:admin@mongodb:27017/users?authSource=admin

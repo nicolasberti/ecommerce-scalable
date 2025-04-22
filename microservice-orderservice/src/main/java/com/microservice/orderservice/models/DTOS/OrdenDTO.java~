@@ -1,0 +1,28 @@
+package com.microservice.orderservice.models.DTOS;
+
+import com.microservice.orderservice.models.ProductoOrden;
+
+import java.util.List;
+
+public class OrdenDTO {
+    private String ordenId;
+    private List<ProductoOrden> productos;
+
+    public OrdenDTO(String id, List<ProductoOrden> productos) {
+        this.id = id;
+        this.productos = productos;
+    }
+
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    public List<ProductoOrden> getProductos() {
+        return productos;
+    }
+    public void setProductos(List<ProductoOrden> productos) {
+        this.productos = productos;
+    }
+}
