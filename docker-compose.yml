@@ -93,10 +93,12 @@ services:
      - spring.redis.host=redis
      - spring.redis.port=6379
      - spring.cache.type=redis
+     - spring.kafka.bootstrap-servers: kafka:9092
     depends_on:
      - mysql
      - redis
      - eureka
+     - kafka
     restart: always
     networks:
       - backend
@@ -152,6 +154,25 @@ services:
     restart: always
     networks:
       - backend    
+      
+  microservice-orders:
+    build:
+      context: ./microservice-orders  # Ruta del microservicio
+    container_name: orders_service
+    ports:
+      - "8084:8084"
+    environment:
+      - spring.application.name=microservice-orders
+      - eureka.client.service-url.defaultZone=http://eureka:8761/eureka/
+      - spring.data.mongodb.uri=mongodb://root:admin@mongodb:27017/orders?authSource=admin
+      - spring.kafka.bootstrap-servers: kafka:9092
+    depends_on:
+     - eureka
+     - kafka
+     - mongodb
+    restart: always
+    networks:
+      - backend  
       
 volumes:
   mysql_data:
