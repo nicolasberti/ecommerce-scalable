@@ -1,15 +1,15 @@
 package com.microservice.productcatalog.models.DTOS;
 
 public class ProductoOrden {
-    private Long id;
+    private long id;
     private int cantidad;
 
-    public ProductoOrden(Long id, int cantidad) {
+    public ProductoOrden(long id, int cantidad) {
         this.id = id;
         this.cantidad = cantidad;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

@@ -18,10 +18,11 @@ public class SendOrden {
 
     public void enviarOrden(Orden orden) {
         try {
-            OrdenDTO ordenDTO = new OrdenDTO(orden.getId(), orden.getProductos());
-            String ordenJson = objectMapper.writeValueAsString(ordenDTO);
+            String ordenJson = objectMapper.writeValueAsString(orden);
             kafkaTemplate.send(TOPIC, ordenJson);
+			System.out.println("Enviando MSG: "+ordenJson);
         } catch (Exception e) {
+			System.out.println("Error al enviar el MSG");
             e.printStackTrace();
         }
     }

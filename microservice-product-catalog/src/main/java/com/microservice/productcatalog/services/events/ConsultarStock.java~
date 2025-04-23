@@ -33,12 +33,12 @@ public class ConsultarStock {
                 ProductoOrden producto = orden.getProductos().get(i);
                 totalPrice += stockService.reducirStock(producto.getId(), producto.getCantidad());
             }
-            String mensaje = "{\"id\": " + orden.getId() + ", \"totalPrice\": " + totalPrice + "}";
+            String mensaje = "{\"orderId\": " + orden.getOrderId() + ", \"totalPrice\": " + totalPrice + "}";
             kafkaTemplate.send("pagos", mensaje);
 			System.out.println("Se envió a pagar: "+mensaje);
         } catch (Exception e) {
             if(orden != null /*&& e instanceof StockException*/) {
-                String msgRollback = "{\"id\": " + orden.getId() + "}";
+                String msgRollback = "{\"orderId\": " + orden.getOrderId() + "}";
                 kafkaTemplate.send("rollback-orden", msgRollback);
             }
             e.printStackTrace();

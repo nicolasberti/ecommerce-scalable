@@ -1,12 +1,10 @@
 package com.microservice.orderservice.models;
 
-import jakarta.persistence.Entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Entity
 @Document(collection = "orders")
 public class Orden {
     @Id

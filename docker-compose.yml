@@ -1,35 +1,41 @@
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.0.1
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+    image: wurstmeister/zookeeper:latest
     ports:
       - "2181:2181"
-    networks:
-      - backend
-
-  kafka:
-    image: confluentinc/cp-kafka:7.0.1
-    depends_on:
-      - zookeeper
+      
+  broker:
+    image: apache/kafka:latest
+    hostname: broker
+    container_name: broker
     ports:
-      - "9092:9092"
+      - 9092:9092
+    depends_on:
+     - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"  # permite crear automaticamente topicos
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker:29093
+      KAFKA_LISTENERS: PLAINTEXT://broker:29092,CONTROLLER://broker:29093,PLAINTEXT_HOST://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
     networks:
-      - backend
+     - backend
     
   mysql:
     image: mysql:latest
     container_name: mysql_ecommerce
     restart: always
-    depends_on:
-     - eureka
     environment:
       MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: ecommerce
@@ -59,8 +65,6 @@ services:
      image: mongo:latest
      container_name: mongo_db
      restart: always
-     depends_on:
-      - eureka
      environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: admin
@@ -81,6 +85,18 @@ services:
     networks:
       - backend
 
+  nginx-gateway:
+    build:
+      context: ./nginx
+    container_name: nginx_gateway
+    ports:
+      - "80:80" 
+    depends_on:
+      - microservice-user
+      - microservice-product-catalog
+    networks:
+      - backend
+      
   microservice-product-catalog:
     build:
       context: ./microservice-product-catalog  # Ruta del microservicio
@@ -93,12 +109,13 @@ services:
      - spring.redis.host=redis
      - spring.redis.port=6379
      - spring.cache.type=redis
-     - spring.kafka.bootstrap-servers: kafka:9092
+     - spring.kafka.bootstrap-servers=broker:29092
+     - spring.kafka.admin.properties.bootstrap.servers=broker:29092
     depends_on:
      - mysql
      - redis
      - eureka
-     - kafka
+     - broker
     restart: always
     networks:
       - backend
@@ -126,18 +143,6 @@ services:
     networks:
       - backend
       
-  nginx-gateway:
-    build:
-      context: ./nginx
-    container_name: nginx_gateway
-    ports:
-      - "80:80" 
-    depends_on:
-      - microservice-user
-      - microservice-product-catalog
-    networks:
-      - backend
-      
   microservice-shoppingcart:
     build:
       context: ./microservice-shoppingcart  # Ruta del microservicio
@@ -154,10 +159,10 @@ services:
     restart: always
     networks:
       - backend    
-      
+
   microservice-orders:
     build:
-      context: ./microservice-orders  # Ruta del microservicio
+      context: ./microservice-orderservice  # Ruta del microservicio
     container_name: orders_service
     ports:
       - "8084:8084"
@@ -165,10 +170,11 @@ services:
       - spring.application.name=microservice-orders
       - eureka.client.service-url.defaultZone=http://eureka:8761/eureka/
       - spring.data.mongodb.uri=mongodb://root:admin@mongodb:27017/orders?authSource=admin
-      - spring.kafka.bootstrap-servers: kafka:9092
+      - spring.kafka.bootstrap-servers=broker:29092
+      - spring.kafka.admin.properties.bootstrap.servers=broker:29092
     depends_on:
      - eureka
-     - kafka
+     - broker
      - mongodb
     restart: always
     networks:

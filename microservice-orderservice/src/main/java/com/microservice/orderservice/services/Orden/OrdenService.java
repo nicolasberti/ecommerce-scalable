@@ -26,7 +26,6 @@ public class OrdenService {
 
     public void createOrder(OrdenDTO orden) {
         Orden ordenCreated = new Orden();
-        ordenCreated.setId(orden.getId());
         ordenCreated.setProductos(orden.getProductos());
         ordenCreated.setStatus(OrdenStatus.PENDIENTE);
         ordenRepository.save(ordenCreated);
