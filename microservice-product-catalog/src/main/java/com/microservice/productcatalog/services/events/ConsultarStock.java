@@ -24,7 +24,7 @@ public class ConsultarStock {
     @KafkaListener(topics = "ordenes", groupId = "stock-service")
     @Transactional
     public void recibirOrden(String ordenMsg) {
-		System.out.println("Se recibió la orden");
+		System.out.println("Se recibió la orden: "+ordenMsg);
         OrdenDTO orden = null;
         try {
             orden = objectMapper.readValue(ordenMsg, OrdenDTO.class);
@@ -38,8 +38,9 @@ public class ConsultarStock {
 			System.out.println("Se envió a pagar: "+mensaje);
         } catch (Exception e) {
             if(orden != null /*&& e instanceof StockException*/) {
-                String msgRollback = "{\"id\": " + orden.getId() + "}";
-                kafkaTemplate.send("rollback-orden", msgRollback);
+                String msgRollback = "{\"id\": \"" + orden.getId() + "\", \"status\": \"CANCELADA\" }";
+                kafkaTemplate.send("cambiar-estado-orden", msgRollback);
+                System.out.println("Se envió a cambiar el estado de la orden: "+msgRollback);
             }
             e.printStackTrace();
         }

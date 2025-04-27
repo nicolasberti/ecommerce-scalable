@@ -32,4 +32,13 @@ public class OrdenService {
         sendOrden.enviarOrden(ordenCreated);
     }
 
+    public Orden modificarOrden(String id, OrdenStatus status) {
+        Orden orden = ordenRepository.findById(id).orElse(null);
+        if(orden == null) {
+            return null;
+        }
+        orden.setStatus(status);
+        return ordenRepository.save(orden);
+    }
+
 }

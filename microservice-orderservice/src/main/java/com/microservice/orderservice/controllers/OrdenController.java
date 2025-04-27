@@ -1,12 +1,9 @@
 package com.microservice.orderservice.controllers;
 
 import com.microservice.orderservice.models.DTOS.OrdenDTO;
-import com.microservice.orderservice.models.Orden;
 import com.microservice.orderservice.services.Orden.OrdenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -20,8 +17,7 @@ public class OrdenController {
 
     @GetMapping
     public ResponseEntity<?> getOrders() {
-        List<Orden> ordenes = ordenService.getOrders();
-        return ResponseEntity.ok(ordenes);
+        return ResponseEntity.ok(ordenService.getOrders());
     }
 
     @PostMapping
