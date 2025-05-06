@@ -28,6 +28,12 @@ public class StockService {
         }
 
         return totalPrice;
+    }
 
+    public void incrementarStock(Long productoId, int cantidad) throws Exception {
+        Producto producto = productoRepository.findById(productoId).orElse(null);
+        if(producto == null)
+            throw new StockException("Producto inválido");
+        producto.setStock(producto.getStock() + cantidad);
     }
 }
