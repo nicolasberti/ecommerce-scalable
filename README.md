@@ -3,11 +3,9 @@
 ## Descripción
 Plataforma de comercio electrónico desarrollada bajo la arquitectura de microservicios.
 
-En construcción... 🚀⏳
-
 ## Arquitectura del Sistema
 ![Arquitectura del sistema](imagenes/arquitectura.jpg)
-## Transacción crear órden asincrónica (con estado pendiente) - Patrón SAGA
+## Transacción crear órden asincrónica (con estado pendiente) - Patrón SAGA coreografía
 ![Transacción crear órden asincronica (con estado pendiente)](imagenes/orden_asincronica.jpg)
 
 ## Tecnologías y herramientas utilizadas
